@@ -30,8 +30,6 @@ Note:- Virtualenv needs to be configured and activated for production server. WS
 ```python
 Performing system checks...
 
-System check identified no issues (0 silenced).
-September 20, 2021 - 17:09:32
 Django version 2.0, using settings 'ChatApp.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
