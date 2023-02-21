@@ -1,6 +1,4 @@
 # CAMPUS Connect
-![Campus-Saathi-logo](https://github.com/anuran-roy/hacknpitch/blob/main/home/static/home/ic_launcher.png "CAMPUS OWL : ALWAYS GUARDING THE CAMPUS 💯 🥇 👍🏻 ")
- 
 
 # Requirements
 Any Windows/Linux 4.14+ kernel/MacOS with Python 3.8.10 or above.
