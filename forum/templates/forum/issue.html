@@ -1,0 +1,109 @@
+{% extends 'forum/base.html' %}
+{% load static %}
+
+{% block title %}{{ subject }}{% endblock %}
+
+{% block body %}
+<center>
+<img src="/media/{{ image }}" style="width: 70%;" class="my-4 mx-4">
+<h1>{{ subject }}</h1>
+<h3>{{ summary }}</h3>
+<p>Posted on {{ date }} by <a href="/forum/user/{{author}}" style="cursor: pointer">{{ author }}</a></p>
+<p>Tags: 
+    {% for i in tags %}
+        <a href="/forum/tag/{{i}}">{{i}}</a> 
+    {% endfor %}
+</p>
+<h4>Votes: {{votes}}</h4>
+<article class="my-4 mx-4">
+    <div class="container my-4 mx-4">
+        {{ description }}
+    </div>
+</article>
+<h3>Status of issue: {{ status }}</h3>
+<h3>Tracked: {{ tracked|yesno:"Yes,No" }}</h3>
+<div class="row">
+    <form method="POST" action="/forum/voteup/" class="my-2">
+        {% csrf_token %}
+        <input type="hidden" name="postId" value="{{sno}}">
+        <input type="hidden" name="poster" value="{{author}}">
+        <input type="submit" value="Like" class="btn btn-outline-primary">
+    </form>
+    <!-- <br><br> -->
+    <form method="POST" action="/forum/votedown/" class="my-2">
+        {% csrf_token %}
+        <input type="hidden" name="postId" value="{{sno}}">        
+        <input type="hidden" name="poster" value="{{author}}">
+        <input type="submit" value="Dislike" class="btn btn-outline-primary">
+    </form>
+</div>
+
+<div class="row">
+    <form method="POST" action="/forum/deletepost/issue" class="my-2">
+        {% csrf_token %}
+        <input type="hidden" name="postId" value="{{sno}}">        
+        <input type="hidden" name="poster" value="{{author}}">
+        <input type="submit" value="Delete" class="btn btn-outline-primary">
+    </form>
+</div>
+<h3>Has the issue been considered?</h3>
+<div class="row">
+    <form method="POST" action="/forum/tvoteup/" class="my-2">
+        {% csrf_token %}
+        <input type="hidden" name="postTags" value="{{tags}}">        
+        <input type="submit" value="Yes" class="btn btn-outline-primary">
+    </form>
+    <!-- <br><br> -->
+    <form method="POST" action="/forum/tvotedown/" class="my-2">
+        {% csrf_token %}
+        <input type="hidden" name="postTags" value="{{tags}}">        
+        <input type="submit" value="No" class="btn btn-outline-primary">
+    </form>
+</div>
+</center>
+
+<div class="container">
+    <div class="row">
+        <h2>Comments ({{comments|length}})</h2>
+        <a href="#commentArea">Post a comment</a>
+    </div>
+    <form method="POST" action="/forum/postcomment/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-floating my-4 mx-4">
+            <textarea class="form-control" style="height: 250px;" placeholder="Describe your issue" id="commentArea" style="height: 100px" name="comment" required></textarea>
+            <label for="floatingTextarea2">Comment*</label>
+        </div>
+        <!-- <div class="my-5 mx-5">
+            <div class="my-4">Upload image:</div>
+            <input type="file" id="myFile" name="myfile">
+        </div> -->
+        <input type="hidden" name="postId" value="{{sno}}">
+        <input type="hidden" name="postSlug" value="{{slug}}">
+        <div class="mb-3 my-4 mx-4">
+            <div class="form-floating mb-4 my-4 mx-4">
+                <input type="text" class="form-control" id="tags" placeholder="Enter the tags" name="tags">
+                <label for="subject" class="form-label">Tags (separated by commas)</label>
+            </div>
+        </div>
+        <input type="submit" value="Comment" class="btn btn-outline-primary">
+    </form>
+    {% for i in comments %}
+        <div class="row my-4">
+            <div class="col-md-2">
+                Image here
+            </div>
+            <div class="col-md-10">
+                <p>Time: {{i.timestamp}} </p>
+                <b><a href="/forum/user/{{i.user}}" style="text-decoration: none;">{{i.user}}</a></b> says:
+                <p class="my-2 mx-2">{{i.description}}</p>
+                <form method="POST" action="/forum/deletepost/comment" class="my-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="postId" value="{{i.sno}}">        
+                    <input type="hidden" name="poster" value="{{i.username}}"> 
+                    <input type="submit" value="Delete" class="btn btn-outline-primary">
+                </form>
+            </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
